@@ -1,0 +1,48 @@
+{
+    "userId": 2,
+    "gameId": 2,
+    "eventData": [
+        { "events": [{
+            "name": "match_end",
+            "data": ""
+          }], "timestamp": 1710566081414 },
+          { "events": [{
+            "name": "match_end",
+            "data": ""
+          }], "timestamp": 1710566081414 },
+          { "events": [{
+            "name": "match_end",
+            "data": ""
+          }], "timestamp": 1710566081414 }
+      ],
+    "infoData":[
+        {
+            "info": {
+              "match_info": {
+                "round_number": null
+              }
+            },
+            "feature": "match_info",
+            "timestamp": 1710670507742
+        },
+        {
+            "info": {
+                "match_info": {
+                    "round_phase": null
+                  }              
+            },
+            "feature": "match_info",
+            "timestamp": 1710670507742
+        },
+        {
+            "info": {
+                "match_info": {
+                    "game_mode": null
+                  }                         
+            },
+            "feature": "match_info",
+            "timestamp": 1710670507742
+        }
+          
+    ]
+}

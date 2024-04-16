@@ -1,7 +1,6 @@
-
-
 import express , {Response , Request} from "express"
 import helmet from "helmet"
+import cors from "cors"
 import hpp from "hpp"
 import { envVariables } from "./utils/envVariables"
 import { userRouter } from "./User/Router/userRouter"
@@ -12,6 +11,7 @@ import { challengesRouter } from "./challenges/Routers/challengesRouter"
 import { markitPlaceRouter } from "./MarkitPlace/Router/martkitPlacerouter"
 
 const app = express()
+app.use(cors())
 
 app.use(express.json())
 app.use(helmet())
@@ -26,7 +26,7 @@ app.use("/game",gamesRouter)
 app.use("/leaderboard",leaderBoardRouter)
 app.use("/inventory",inventoryRouter)
 app.use("/challenges",challengesRouter)
-app.unsubscribe("/marketplace",markitPlaceRouter)
+app.use("/marketplace",markitPlaceRouter)
 
 app.use("*" , (req,res)=>{
     res.status(404).json("No Such Route")

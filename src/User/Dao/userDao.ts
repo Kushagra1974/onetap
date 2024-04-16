@@ -8,6 +8,7 @@ interface DaoType {
     getUserProfileData : (userId : string) => Promise<UserProfileDataArray>;
     getIsUserPremium : (userId : string) => Promise<IsPremiumUserType>
     getBalance : (userId:string) => Promise<Balance> 
+    getUserId : (authId:string) => Promise<number>
 }
 
 export type Balance = {
@@ -60,6 +61,21 @@ class UserDoa extends Dao implements DaoType{
         if(error) this.throwError(error)
         return data;
     }
+
+    getUserId: (authId: string) => Promise<number> = async (authId) => {
+        const { data, error } = await this.dbInstance!.from('User').select(`id`).eq(`Auth`, authId).single();
+        
+        if (error) {
+          this.throwError(error);
+        }
+    
+        if (!data) {
+          throw new Error(`User with authId ${authId} not found.`);
+        }
+    
+        return data.id;
+      };
+    
 }
 
 export const userDao = new UserDoa()
