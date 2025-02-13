@@ -22,6 +22,7 @@ interface IVallorent {
   uploadProgress: (data: UploadProgress) => Promise<any>;
   getProgressData: (userId: string) => Promise<any>;
   upsertProgress: (progress: UpsertData) => Promise<any>;
+  editChallenge: (data: UpsertData, id: string) => Promise<any>;
 }
 type UpsertData = Array<{
   requirement: VallorentUserData;
@@ -120,10 +121,12 @@ class Vallorent extends Dao implements IVallorent {
     userAchievement: VallorentUserData,
     goal: VallorentUptoDateData
   ) {
-    console.log("--------------------checking if challenge is completed------------------")
-    console.log( "user achievement" , userAchievement)
-    console.log("goal" , goal)
-    
+    console.log(
+      "--------------------checking if challenge is completed------------------"
+    );
+    console.log("user achievement", userAchievement);
+    console.log("goal", goal);
+
     if (userAchievement === null) this.throwError("Null object");
     let achieved = 0;
     if (userAchievement.assists >= goal.assists) {
@@ -179,26 +182,26 @@ class Vallorent extends Dao implements IVallorent {
       goal.team_scores +
       goal.total_kills;
 
-      player =
-        userAchievement.assists +
-        userAchievement.damage_done +
-        userAchievement.damage_taken +
-        userAchievement.deaths +
-        userAchievement.headshot +
-        userAchievement.spikes_defuse +
-        userAchievement.spikes_planted +
-        userAchievement.team_scores +
-        userAchievement.total_kills;
-    console.log("player" , player)
-    console.log("total", total)
+    player =
+      userAchievement.assists +
+      userAchievement.damage_done +
+      userAchievement.damage_taken +
+      userAchievement.deaths +
+      userAchievement.headshot +
+      userAchievement.spikes_defuse +
+      userAchievement.spikes_planted +
+      userAchievement.team_scores +
+      userAchievement.total_kills;
+    console.log("player", player);
+    console.log("total", total);
     let percentage: number = (player / total) * 100;
-    
+
     let isCompleted = false;
     if (achieved === 9) isCompleted = true;
 
-    console.log("is completed" ,isCompleted)
-    console.log("percentage" ,percentage)
-    console.log("------------------------------------------------------------")
+    console.log("is completed", isCompleted);
+    console.log("percentage", percentage);
+    console.log("------------------------------------------------------------");
     return { isCompleted, percentage };
   }
 
@@ -228,10 +231,8 @@ class Vallorent extends Dao implements IVallorent {
     matches: VallorentUptoDateDataArray,
     challenge: VallorentUptoDateData
   ) {
-
-    console.log("----------------------calculateTotal------------------------")
-    console.log()
-
+    console.log("----------------------calculateTotal------------------------");
+    console.log();
 
     const status = challenge.match_status;
     const total: VallorentUptoDateData = {
@@ -276,8 +277,18 @@ class Vallorent extends Dao implements IVallorent {
     if (res.error) this.throwError(res.error);
   };
 
+  editChallenge: (data: any, id: string) => Promise<void> = async (
+    data: any,
+    id: string
+  ) => {
+    const res = await this.dbInstance!.from("game_challenges")
+      .update({ ...data })
+      .eq("id", id);
+    if (res.error) this.throwError(res.error);
+  };
+
   async uploadProgress(progress: UploadProgress) {
-    console.log("progress" , progress)
+    console.log("progress", progress);
     const { data, error } = await this.dbInstance!.from("vallorent_progress")
       .insert([...progress])
       .select();
@@ -376,6 +387,14 @@ class Vallorent extends Dao implements IVallorent {
       if (i != 2) updatedProgress.push(res.data);
     });
     return updatedProgress;
+  }
+
+  async deleteChallenge(challengeId: string) {
+    const { data, error } = await this.dbInstance!.from("vallorent_progress")
+      .delete()
+      .eq("id", challengeId);
+    if (error) this.throwError(error);
+    return data;
   }
 
   async getProgressData(userId: string) {

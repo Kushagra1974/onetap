@@ -127,15 +127,6 @@ class UserDoa extends Dao implements DaoType {
     if (error) this.throwError(error);
     return data;
   };
-
-  countUserId: () => Promise<any> = async () => {
-    const { count, error } = await this.dbInstance!.from("User").select("*", {
-      count: "exact",
-      head: true,
-    });
-    console.log(count, error);
-    return count;
-  };
 }
 
 export const userDao = new UserDoa();

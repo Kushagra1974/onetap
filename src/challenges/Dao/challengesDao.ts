@@ -25,6 +25,7 @@ interface DaoType {
     completed: updateCompletedChallenges
   ) => Promise<any>;
   updateTotalCoins: (userId: string, coins: number) => Promise<any>;
+  getAllChallenges: () => Promise<OnGoingChallenges>
 }
 
 class ChallengesDao extends Dao implements DaoType {
@@ -124,6 +125,17 @@ class ChallengesDao extends Dao implements DaoType {
     if (res.error) this.throwError(res.error);
     return res.data.balance;
   };
+
+  getAllChallenges: () => Promise<OnGoingChallenges> = async () => {
+    const { data, error } = await this.dbInstance!.from(
+      "game_challenges"
+    )
+      .select(
+        "id,Game(gameName,id), requirements, startTime ,endTime ,type, name ,reward"
+      )
+    if (error) this.throwError(error);
+    return data;
+  }
 }
 
 export const challengesDao = new ChallengesDao();
